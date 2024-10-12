@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function SignUp() {
   const [formData, setFormData] = useState({})
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value })
   }
@@ -22,14 +24,18 @@ export default function SignUp() {
         body: JSON.stringify(formData),
       })
       const data = await res.json()
+      console.log('data', data)
       setLoading(false)
       if (data.success === false) {
+        console.log('data 2', data.success)
+        console.log('data 3')
         setError(true)
         return
+      } else {
+        navigate('/sign-in')
       }
     } catch (error) {
       setLoading(false)
-      setError(true)
     }
   }
 
@@ -71,7 +77,9 @@ export default function SignUp() {
           <span className="text-blue-500">Sign in</span>
         </Link>
       </div>
-      <p className="text-red-700 mt-5">{error && 'Something went wrong'}</p>
+      <p className="text-red-700 mt-5">
+        {error === true && 'Something went wrong'}
+      </p>
     </div>
   )
 }
